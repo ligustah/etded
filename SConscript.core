@@ -9,74 +9,6 @@ import scons_utils
 Import( 'GLOBALS' )
 Import( GLOBALS )
 
-jpeg_string = """
-jcapimin.c
-jchuff.c
-jcinit.c
-jccoefct.c
-jccolor.c
-jfdctflt.c
-jcdctmgr.c
-jcphuff.c
-jcmainct.c
-jcmarker.c
-jcmaster.c
-jcomapi.c
-jcparam.c
-jcprepct.c
-jcsample.c
-jdapimin.c
-jdapistd.c
-jdatasrc.c
-jdcoefct.c
-jdcolor.c
-jddctmgr.c
-jdhuff.c
-jdinput.c
-jdmainct.c
-jdmarker.c
-jdmaster.c
-jdpostct.c
-jdsample.c
-jdtrans.c
-jerror.c
-jidctflt.c
-jmemmgr.c
-jmemnobs.c
-jutils.c"""
-
-jpeg_list = scons_utils.BuildList( 'jpeg-6', jpeg_string )
-
-renderer_string = """
-tr_animation_mdm.c
-tr_animation_mds.c
-tr_backend.c
-tr_bsp.c
-tr_cmds.c
-tr_cmesh.c
-tr_curve.c
-tr_decals.c
-tr_flares.c
-tr_font.c
-tr_image.c
-tr_init.c
-tr_light.c
-tr_main.c
-tr_marks.c
-tr_mesh.c
-tr_model.c
-tr_noise.c
-tr_scene.c
-tr_shade.c
-tr_shade_calc.c
-tr_shader.c
-tr_shadows.c
-tr_sky.c
-tr_surface.c
-tr_world.c"""
-
-renderer_list = scons_utils.BuildList( 'renderer', renderer_string )
-
 server_string = """
 sv_bot.c
 sv_ccmds.c
@@ -113,38 +45,6 @@ if ( cpu == 'x86' ):
 
 qcommon_list = scons_utils.BuildList( 'qcommon', qcommon_string )
 
-splines_string = """
-math_angles.cpp
-math_matrix.cpp
-math_quaternion.cpp
-math_vector.cpp
-q_parse.cpp
-q_shared.c
-splines.cpp
-util_str.cpp"""
-
-
-splines_list = scons_utils.BuildList( 'splines', splines_string )
-
-client_string = """
-cl_cgame.c
-cl_cin.c
-cl_console.c
-cl_input.c
-cl_keys.c
-cl_main.c
-cl_net_chan.c
-cl_parse.c
-cl_scrn.c
-cl_ui.c
-snd_adpcm.c
-snd_dma.c
-snd_mem.c
-snd_mix.c
-snd_wavelet.c"""
-
-client_list = scons_utils.BuildList( 'client', client_string )
-
 linux_sources = [
         'unix/linux_signals.c',
         'unix/unix_main.c',
@@ -153,14 +53,6 @@ linux_sources = [
         'game/q_shared.c',
         'game/q_math.c',
 #        'unix/matha.S'
-]
-
-linux_full_sources = [
-        'unix/linux_glimp.c',
-        'unix/linux_qgl.c',
-        'unix/linux_snd.c',
-        'unix/linux_joystick.c',
-#        'unix/snd_mixa.S'
 ]
 
 mac_sources = [
@@ -194,14 +86,6 @@ win32_sources = [
 	'win32/win_syscon.c',
         'game/q_shared.c',
         'game/q_math.c',
-]
-
-win32_full_sources = [
-	'win32/win_input.c',
-	'win32/win_glimp.c',
-	'win32/win_qgl.c',
-	'win32/win_gamma.c',
-	'win32/win_snd.c',
 ]
 
 botlib_list = [
@@ -259,22 +143,17 @@ if ( g_os == 'Linux' ):
 	gas_env.Append( CPPDEFINES = [ 'ELF' ] )
 	gas_env.Append( ASFLAGS = [ '-m32', '-x', 'assembler-with-cpp' ] )
 	matha = gas_env.StaticObject( 'unix/matha.spp' )
-        snd_mixa = gas_env.StaticObject( 'unix/snd_mixa.spp' )
+    #snd_mixa = gas_env.StaticObject( 'unix/snd_mixa.spp' )
 
 splines_env = g_env.Clone()
-splines_lib = splines_env.StaticLibrary( splines_list )
+#splines_lib = splines_env.StaticLibrary( splines_list )
 
 local_env = g_env.Clone()
 
 if ( g_os == 'Linux' ):
 	local_env.Append( LIBS = [ 'dl' ] )
-	if ( local_dedicated == 0 ):
-		local_env.Append( LIBS = [ 'X11', 'Xext', 'm' ] )
-		local_env.Append( LIBPATH = [ '/usr/X11R6/lib' ] )
-		local_env.Append( CPPPATH = [ 'curl-7.12.2/include' ] )
-	else:
-		local_env.Append( CPPDEFINES = [ 'DEDICATED' ] )
-		local_env.Append( LIBS = [ 'm' ] )
+	local_env.Append( CPPDEFINES = [ 'DEDICATED' ] )
+	local_env.Append( LIBS = [ 'm' ] )
 
 	if gcc3 == 0:
 		g_env.Append(LINKFLAGS=[ os.popen( g_env['CXX'] + ' -print-file-name=libstdc++.a' ).read().rstrip() ])
@@ -283,11 +162,7 @@ if ( g_os == 'Linux' ):
 		local_env['LINK'] = 'unix/staticlinkcpp.sh'
 elif ( g_os == 'win32' ):
 	local_env.Append( LIBS = [ 'm', 'winmm', 'wsock32', 'gdi32', 'ole32', 'iphlpapi' ] )
-	if ( local_dedicated == 0 ):
-		local_env.Append( LIBS = [ 'dinput', 'dsound' ] )
-		local_env.Append( CPPPATH = [ 'curl-7.12.2/include' ] )
-	else:
-		local_env.Append( CPPDEFINES = [ 'DEDICATED' ] )
+	local_env.Append( CPPDEFINES = [ 'DEDICATED' ] )
 	local_env['LINK'] = g_env['CXX']
 elif ( g_os == 'Darwin' ):
 	local_env.Append( LINKFLAGS = [ '-framework', 'AGL', '-framework', 'OpenGL', '-framework', 'Carbon', '-framework', 'IOKit', '-framework', 'DrawSprocket', '-lcurl' ] )
@@ -312,21 +187,9 @@ elif ( g_os == 'Darwin' ):
 
 source_list += botlib_objs
 
-if ( local_dedicated == 0 ):
-	source_list += jpeg_list
-	source_list += renderer_list
-	source_list += client_list
-	source_list += [ 'qcommon/dl_main_curl.c' ]
-	source_list += curl_lib
-	if ( g_os == 'Linux' ):
-		source_list += snd_mixa
-		source_list += linux_full_sources
-		source_list += staticx11_libs
-	if ( g_os == 'win32' ):
-		source_list += win32_full_sources
-else:
-	source_list += [ 'null/null_client.c', 'null/null_input.c', 'null/null_snddma.c', 'qcommon/dl_main_stubs.c' ]
-source_list += splines_lib
+
+source_list += [ 'null/null_client.c', 'null/null_input.c', 'null/null_snddma.c', 'qcommon/dl_main_stubs.c' ]
+#source_list += splines_lib
 
 ret = local_env.Program( target = 'et', source = source_list )
 Return( 'ret' )

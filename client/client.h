@@ -30,10 +30,10 @@ If you have questions concerning this license or the applicable additional terms
 
 #include "../game/q_shared.h"
 #include "../qcommon/qcommon.h"
-#include "../renderer/tr_public.h"
-#include "../ui/ui_public.h"
-#include "keys.h"
-#include "snd_public.h"
+//#include "../renderer/tr_public.h"
+//#include "../ui/ui_public.h"
+//#include "keys.h"
+//#include "snd_public.h"
 #include "../cgame/cg_public.h"
 #include "../game/bg_public.h"
 
@@ -376,6 +376,7 @@ typedef struct {
 extern clientStatic_t cls;
 
 //=============================================================================
+/* unused by server
 
 extern vm_t            *cgvm;   // interface to cgame dll or vm
 extern vm_t            *uivm;   // interface to ui dll or vm
@@ -704,3 +705,4 @@ void LAN_SaveServersToCache();
 void CL_Netchan_Transmit( netchan_t *chan, msg_t* msg ); //int length, const byte *data );
 void CL_Netchan_TransmitNextFragment( netchan_t *chan );
 qboolean CL_Netchan_Process( netchan_t *chan, msg_t *msg );
+*/
