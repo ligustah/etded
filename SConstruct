@@ -230,7 +230,10 @@ else:
 	sys.exit(0)
 
 # create the build environements
-g_base_env = Environment( ENV = os.environ, CC = CC, CXX = CXX, LINK = LINK, CPPFLAGS = BASECPPFLAGS, LINKFLAGS = BASELINKFLAGS, CPPPATH = CORECPPPATH, LIBPATH = CORELIBPATH )
+if g_os == 'win32':
+	g_base_env = Environment( tools=['mingw'], ENV = os.environ, CC = CC, CXX = CXX, LINK = LINK, CPPFLAGS = BASECPPFLAGS, LINKFLAGS = BASELINKFLAGS, CPPPATH = CORECPPPATH, LIBPATH = CORELIBPATH )
+else:
+	g_base_env = Environment( ENV = os.environ, CC = CC, CXX = CXX, LINK = LINK, CPPFLAGS = BASECPPFLAGS, LINKFLAGS = BASELINKFLAGS, CPPPATH = CORECPPPATH, LIBPATH = CORELIBPATH )
 scons_utils.SetupUtils( g_base_env )
 
 g_env = g_base_env.Clone()
@@ -274,6 +277,7 @@ if g_os == 'win32' and os.name != 'nt':
 	g_env['PROGSUFFIX']	= '.exe'
 	g_env['SHLIBSUFFIX']	= '.dll'
 	g_env['SHCCFLAGS']	= '$CCFLAGS'
+	cpu = 'x86'
 
 # end win32 cross compilation ------------------
 

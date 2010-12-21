@@ -82,6 +82,7 @@ win32_sources = [
 	'win32/win_main.c',
 	'win32/win_net.c',
 	'win32/win_shared.c',
+	'win32/win_glimp.c',
 	'win32/win_wndproc.c',
 	'win32/win_syscon.c',
         'game/q_shared.c',
@@ -162,7 +163,8 @@ if ( g_os == 'Linux' ):
 		local_env['LINK'] = 'unix/staticlinkcpp.sh'
 elif ( g_os == 'win32' ):
 	local_env.Append( LIBS = [ 'm', 'winmm', 'wsock32', 'gdi32', 'ole32', 'iphlpapi' ] )
-	local_env.Append( CPPDEFINES = [ 'DEDICATED' ] )
+	local_env.Append( CPPDEFINES = [ 'DEDICATED', 'WIN32', '_WINDOWS', '_M_IX86' ] )
+	#local_env.Append( CPPFLAGS = [ '-I', 'C:\Program Files\Microsoft DirectX SDK (June 2010)\Include'] )
 	local_env['LINK'] = g_env['CXX']
 elif ( g_os == 'Darwin' ):
 	local_env.Append( LINKFLAGS = [ '-framework', 'AGL', '-framework', 'OpenGL', '-framework', 'Carbon', '-framework', 'IOKit', '-framework', 'DrawSprocket', '-lcurl' ] )
